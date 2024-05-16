@@ -42,7 +42,7 @@ using UnityEngine;
 깊게: 원본 대상을 가지고 새로운 클론을 만드는 것
 ㄴ 원본과는 다른 인스턴스를 만든다 -> 힙에다가
 
-프리팹은 얇은 복사임.
+프리팹은 얕은 복사임.
  */
 #endregion
 
@@ -61,7 +61,7 @@ public class CPrefabExample : MonoBehaviour
     {
         //FireSample_01();
         //FireSample_02();
-        FireSample_03();
+        //FireSample_03();
     }
 
     void FireSample_01()
