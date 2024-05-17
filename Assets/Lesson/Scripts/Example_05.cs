@@ -1,6 +1,6 @@
-#define EXAMPLE_TYPE_METHOD
+//#define EXAMPLE_TYPE_METHOD
 //#define EXAMPLE_TYPE_CLASS
-//#define EXAMPLE_TYPE_PROPERTY
+#define EXAMPLE_TYPE_PROPERTY
 
 using System.Collections;
 using System.Collections.Generic;
@@ -80,6 +80,34 @@ using UnityEngine;
 - 반면에 out 키워드를 이용할 경우 해당 키워드는 참조 값을 전달 받은 메서드에서 반드시 값이 초기화 된다는 보장을 받을 수 있기 때문에
 초기화 되지 않는 변수의 참조 값을 전달하는 것도 가능하다.
 
+▶ 프로퍼티
+
+- 객체의 속해 있는 필드에 안전하게 접근 / 제어하기 위한 접근자 함수를 뜻한다. (역할을 한다.)
+    ㄴ Get / Set
+
+- 기존에 지니고 있던 Getter / Setter 함수를 좀 더 편리하게 이용하기 등장한 문법
+    ㄴ 프로터리를 사용하게 되면 코드를 안전하게 관리 할 수 있으며 + 편리성에 대한 이점 또한 얻을 수 있다.
+
+- C# 언어 프로퍼티의 특징
+    ㄴ c#스크립트의 목적지는 인스펙터 창이다.
+
+- C# 언어는 프로퍼티를 통해서 간단하게 접근자 함수를 만드는 것이 가능하다.
+    ㄴ 단, 일반적으로 프로퍼티는 맴버 변수와 별개이기 때문에 프로퍼티 안에서 데이터를 조작하기 위한
+       맴버 변수가 필요하다.
+
+- 또한 C# 언어에서는 프로퍼티를 사용할 때 내부 구현이 단순할 경우 이를 자동적으로 정의해주는 오토 프로퍼티
+기능을 제공한다. 오토 프로퍼티를 사용하면 프로퍼티 로직을 단순하게 할 수 있으며 해당 프로퍼티를 통해
+제어할 변수를 별도로 만들지 않아도 된다.
+
+- C# 언어는 프로퍼티를 이용해서 일회성 데이터를 생성하는 것이 가능
+    ㄴ 이를 무명 타입 데이터라고 한다.
+    ㄴ 무명 데이터는 기본적으로 데이터의 이름이 존재하지 않기 때문에 반드시 var를 통해서 할당을 해야 한다.
+
+- 프로퍼티를 사용해서 클래스를 초기화 하는 것도 가능하며 이는 구조체여도 동일하게 적용이 된다.
+
+- 마지막으로 C#의 프로퍼티는 virtual + override 키워드를 통해서 재정의 캐머니즘을 구현할 수 있다.
+
+ 
  */
 #endregion
 
@@ -137,6 +165,72 @@ public class Example_05 : MonoBehaviour
 
 
 #else
+        CWidget widgetA = new CWidget();
+        widgetA.Value = 10;
+        widgetA.String = "Hell Fire";
+        widgetA.SetString("Help, Me");
+
+
+        CWidget widgeB = new CWidget()
+        {
+            Value = 20,
+            String = "Help"
+        };
+        // 두개의 객체 변수 초기화는 차이가 있다.
+        // 자동 inline을 해주는지 안 해주는지 차이
+        // ㄴ 하나는 스택을 지나치고, 하나는 스택에 들어갔다 나온다.
+        // 둘의 차이점 찾기!!!!!!!!!!!!!!!!!!!
+
+
+
+        string oString = "";
+        var oStringBuilder = new System.Text.StringBuilder();
+
+
+        /*
+         String VS StringBuilder
+
+        String: 읽기가 많은 경우에 적합하다.
+
+        StringBuilder: 객체의 참조 값을 힙에서 관리한다. (추가, 삽입, 삭제)
+            ㄴ 새로운 객체를 만들지 않고 문자열을 수정하고 싶을 때 사용한다.
+
+        EX)
+        - 기존 + 연산자를 통해 문자열 연결을 하고 싶다.
+         ㄴ 이렇게 썼을 때 엄청 매우매우 느리다.
+            ㄴ 반복문이 들어가기 때문 + 다른 메모리의 값을 복사하기 때문
+        
+         */
+
+        for (int i = 0; i < 100; i++)
+        {
+            oStringBuilder.Append((i + 1).ToString());
+        }
+        oString = oStringBuilder.ToString();
+
+        // 10, Hell Fire
+        Debug.LogFormat("위젯 정보: {0}, {1}, {2}", widgetA.Value, widgetA.String, widgetA.GetString());
+
+        // 20, Help
+        Debug.LogFormat("위젯 정보: {0}, {1}, {2}", widgeB.Value, widgeB.String, widgeB.GetString());
+
+
+
+        // 무명: 이름이 없는 형식
+        // ㄴ 무명 형식은 선언과 동시에 인스턴스를 할당한다.
+        // ㄴ 무명 형식은 만들고 나서 사용하지 않을 때 유용하나 무명 형식의 프로퍼티에 할당된 값은
+        //    변경이 불가능 하다.
+        // ㄴ 한번 생성된 인스턴스는 읽기만 가능하다.
+        var oAnonymousData = new
+        {
+            Value = 10,
+            String = "Help"
+        };
+        // 지속적으로 관리를 안 하겠다
+        // 동적할당을 하면 강제적으로 GC이 호출된다. -> GC한테 처리를 맡기겠다.
+        // 일회성 데이터에 써준다.
+
+        Debug.LogFormat("Data 정보: {0}, {1}", oAnonymousData.Value, oAnonymousData.String);
 
 #endif
     }
@@ -272,14 +366,14 @@ public class Example_05 : MonoBehaviour
 
         CDerived oDerived = oBase as CDerived;
 
-        if(oDerived != null)
+        if (oDerived != null)
         {
             Debug.Log("다운 캐스팅에 성공");
         }
 
-        for(int i = 0; i<a_oParams.Length; i++)
+        for (int i = 0; i < a_oParams.Length; i++)
         {
-            if(a_oParams[i] is int)
+            if (a_oParams[i] is int)
             {
                 nSumValue += (int)a_oParams[i];
             }
@@ -317,5 +411,63 @@ public class Example_05 : MonoBehaviour
     }
 #else
 
+    class CWidget
+    {
+        private int m_nValue = 0;
+        private string m_oString = "";
+
+        public int Value
+        {
+
+            get
+            {
+                return m_nValue;
+            }
+
+            set
+            {
+                // value: 전달 받은 인자값을 의미한다.
+                m_nValue = value;
+            }
+        }
+
+        // 오토 프로퍼티
+        // ㄴ 코드를 간결하게 해주며 접근자에 조건이 없는 경우 사용을 할 수 있다.
+        // ㄴ 값 변경이 안 되도록 private 지정자를 추가하거나 초기값이 필요한 경우 초기값까지 할당 가능
+        public int CNumber
+        {
+            get; private set;
+        } = 100;
+        // const보다 유동적이고 자율성이 좋다.
+        // ex) 5개의 객체가 Cnumber를 참조하고 있을 때 4개의 객체는 set을 막아버리고 나머지 객체는 private를 풀어줄 수 있다.
+
+        public string String
+        {
+            get; set;
+        }
+
+        public int GetValue()
+        {
+            return m_nValue;
+        }
+
+        public string GetString()
+        {
+            return m_oString;
+        }
+
+        public void SetValue(int nValue)
+        {
+            m_nValue = nValue;
+        }
+
+        public void SetString(string str)
+        {
+            m_oString = str;
+        }
+        // 프로퍼티를 묶어놓은 구조체, 클래스가 필요하다.
+        // 프로퍼티 혼자만 쓰지 않기
+
+    }
 #endif
 }
